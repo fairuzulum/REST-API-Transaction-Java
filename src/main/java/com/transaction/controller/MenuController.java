@@ -1,13 +1,13 @@
 package com.transaction.controller;
 
 import com.transaction.constan.APIUrl;
+import com.transaction.dto.request.SearchMenuRequest;
 import com.transaction.entity.Menu;
 import com.transaction.service.MenuService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -19,5 +19,17 @@ public class MenuController {
     @PostMapping
     public Menu createMenu(@RequestBody Menu menu) {
         return menuService.create(menu);
+    }
+
+    @GetMapping
+    public List<Menu> getAllMenus(
+            @RequestParam(name = "name", required = false) String name,
+            @RequestParam(name = "price", required = false) Long price
+    ) {
+        SearchMenuRequest searchMenuRequest = SearchMenuRequest.builder()
+                .name(name)
+                .price(price)
+                .build();
+        return menuService.getALl(searchMenuRequest);
     }
 }
