@@ -1,10 +1,13 @@
 package com.transaction.controller;
 
 import com.transaction.constan.APIUrl;
+import com.transaction.dto.request.SearchCustomerRequest;
 import com.transaction.entity.Customer;
 import com.transaction.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -16,6 +19,20 @@ public class CustomerController {
     @PostMapping
     public Customer createCustomer(@RequestBody Customer customer) {
         return customerService.create(customer);
+    }
+
+    @GetMapping
+    public List<Customer> getAllCustomer(
+            @RequestParam(name = "name", required = false) String name,
+            @RequestParam(name = "phone", required = false) String phone,
+            @RequestParam(name = "isMember", required = false) Boolean isMember
+    ) {
+        SearchCustomerRequest searchCustomerRequest = SearchCustomerRequest.builder()
+                .name(name)
+                .phone(phone)
+                .is_member(isMember)
+                .build();
+        return customerService.getAll(searchCustomerRequest);
     }
 
 }
