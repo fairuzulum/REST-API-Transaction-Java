@@ -8,20 +8,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-
-@Entity(name = ConstantTable.MENU)
-public class Menu {
+@Entity(name = ConstantTable.TABLE)
+public class Table {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "table_name")
+    private String tableName;
 
-    @Column(name = "price")
-    private Long price;
+
 }
