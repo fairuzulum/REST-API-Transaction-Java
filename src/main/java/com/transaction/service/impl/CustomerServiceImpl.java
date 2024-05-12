@@ -7,6 +7,7 @@ import com.transaction.repository.CustomerRepository;
 import com.transaction.service.CustomerService;
 import com.transaction.specification.CustomerSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -29,5 +30,14 @@ public class CustomerServiceImpl implements CustomerService {
             return customerRepository.findAll();
         }
         return customerRepository.findAll(customerSpecification);
+    }
+
+    @Override
+    public Customer getById(String id) {
+        return findByIdOrThrowNotFound(id);
+    }
+
+    private Customer findByIdOrThrowNotFound(String id) {
+        return customerRepository.findById(id).orElseThrow(() -> new  RuntimeException("Customer not found"));
     }
 }

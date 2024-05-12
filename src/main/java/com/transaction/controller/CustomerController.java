@@ -16,6 +16,11 @@ public class CustomerController {
 
     final CustomerService customerService;
 
+    @GetMapping(path = APIUrl.PATH_VAR_ID)
+    public Customer getCustomerById(@PathVariable String id) {
+        return customerService.getById(id);
+    }
+
     @PostMapping
     public Customer createCustomer(@RequestBody Customer customer) {
         return customerService.create(customer);

@@ -10,4 +10,5 @@ import java.util.List;
 public interface CustomerService {
     Customer create(Customer customer);
     List<Customer> getAll(SearchCustomerRequest searchCustomerRequest);
+    Customer getById(String id);
 }
