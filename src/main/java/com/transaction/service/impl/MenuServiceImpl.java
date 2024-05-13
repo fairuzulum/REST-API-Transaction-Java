@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -21,6 +22,16 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public Menu create(Menu menu) {
         return menuRepository.saveAndFlush(menu);
+    }
+
+    @Override
+    public Menu getById(String id) {
+        Optional<Menu> optionalMenu = menuRepository.findById(id);
+        if(optionalMenu.isEmpty()){
+            throw new RuntimeException("Menu not found");
+        } else {
+            return optionalMenu.get();
+        }
     }
 
     @Override

@@ -9,5 +9,7 @@ import java.util.List;
 @Service
 public interface MenuService {
     Menu create(Menu menu);
+    Menu getById(String id);
     List<Menu> getALl(SearchMenuRequest searchMenuRequest);
 }
+
