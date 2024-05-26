@@ -2,6 +2,7 @@ package com.transaction.service;
 
 import com.transaction.dto.request.SearchMenuRequest;
 import com.transaction.entity.Menu;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,6 +11,6 @@ import java.util.List;
 public interface MenuService {
     Menu create(Menu menu);
     Menu getById(String id);
-    List<Menu> getALl(SearchMenuRequest searchMenuRequest);
+    Page<Menu> getALl(SearchMenuRequest searchMenuRequest);
 }
 

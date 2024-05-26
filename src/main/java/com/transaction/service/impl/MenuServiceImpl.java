@@ -6,6 +6,10 @@ import com.transaction.repository.MenuRepository;
 import com.transaction.service.MenuService;
 import com.transaction.specification.MenuSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -35,11 +39,25 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public List<Menu> getALl(SearchMenuRequest request) {
-        Specification<Menu> menuSpecification = MenuSpecification.getSpecification(request);
-        if(request.getName() == null && request.getPrice() == null) {
-            return menuRepository.findAll();
+    public Page<Menu> getALl(SearchMenuRequest request) {
+        if (request.getPage() <= 0){
+            request.setPage(1);
         }
-        return menuRepository.findAll(menuSpecification);
+
+        String validSortBy;
+        if("name".equalsIgnoreCase(request.getSortBy()) || "price".equalsIgnoreCase(request.getSortBy())){
+            validSortBy = request.getSortBy();
+        }else {
+            validSortBy = "name";
+        }
+
+        Sort sortBy = Sort.by(Sort.Direction.fromString(request.getDirection()), validSortBy);
+
+
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sortBy);
+
+
+        Specification<Menu> specification = MenuSpecification.getSpecification(request);
+        return menuRepository.findAll(specification, pageable);
     }
 }

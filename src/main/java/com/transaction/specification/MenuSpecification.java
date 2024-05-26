@@ -12,15 +12,15 @@ public class MenuSpecification {
         return (root, query, criteriaBuilder) ->{
             List<Predicate> predicates = new ArrayList<>();
             if(request.getName() != null){
-                Predicate namePredicate = criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + request.getName().toLowerCase() + "%");
-                predicates.add(namePredicate);
-            }
-            if(request.getPrice() != null){
-                Predicate pricePredicate = criteriaBuilder.equal(root.get("price"), request.getPrice());
-                predicates.add(pricePredicate);
+                predicates.add(
+                        criteriaBuilder.like(
+                                criteriaBuilder.lower(root.get("name")),
+                                "%" + request.getName().toLowerCase() + "%"
+                        )
+                );
             }
 
-            return query.where(criteriaBuilder.or(predicates.toArray(new Predicate[]{}))).getRestriction();
+            return query.where(predicates.toArray(new Predicate[]{})).getRestriction();
         };
     }
 }
