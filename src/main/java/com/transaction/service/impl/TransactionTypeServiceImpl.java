@@ -7,6 +7,8 @@ import com.transaction.service.TransactionTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 public class TransactionTypeServiceImpl implements TransactionTypeService {
@@ -19,5 +21,10 @@ public class TransactionTypeServiceImpl implements TransactionTypeService {
                 .description(transType)
                 .build();
         return transactionTypeRepository.saveAndFlush(type);
+    }
+
+    @Override
+    public TransactionType getDescription(TransType transType) {
+        return transactionTypeRepository.findByDescription(transType);
     }
 }
