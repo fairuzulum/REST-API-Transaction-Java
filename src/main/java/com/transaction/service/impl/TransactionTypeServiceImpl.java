@@ -1,5 +1,6 @@
 package com.transaction.service.impl;
 
+import com.transaction.constan.TransType;
 import com.transaction.entity.TransactionType;
 import com.transaction.repository.TransactionTypeRepository;
 import com.transaction.service.TransactionTypeService;
@@ -13,7 +14,10 @@ public class TransactionTypeServiceImpl implements TransactionTypeService {
     private final TransactionTypeRepository transactionTypeRepository;
 
     @Override
-    public TransactionType create(TransactionType transactionType) {
-        return transactionTypeRepository.saveAndFlush(transactionType);
+    public TransactionType create(TransType transType) {
+        TransactionType type = TransactionType.builder()
+                .description(transType)
+                .build();
+        return transactionTypeRepository.saveAndFlush(type);
     }
 }

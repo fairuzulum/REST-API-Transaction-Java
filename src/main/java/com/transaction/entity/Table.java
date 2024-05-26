@@ -12,11 +12,20 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@Entity(name = ConstantTable.TABLE)
+@Entity
+@jakarta.persistence.Table(name = ConstantTable.TABLE)
 public class Table {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @SequenceGenerator(
+            name = "table_sequence",
+            sequenceName = "table_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "table_sequence"
+    )
+    private Long id;
 
     @Column(name = "table_name")
     private String tableName;
