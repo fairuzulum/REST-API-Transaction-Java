@@ -20,12 +20,7 @@ public class CustomerSpecification {
                 predicates.add(mobilePhoneNoPredicate);
             }
 
-            if (request.getIs_member() != null){
-                Predicate statusPredicate = criteriaBuilder.equal(root.get("isMember"), request.getIs_member());
-                predicates.add(statusPredicate);
-            }
-
-            return query.where(criteriaBuilder.or(predicates.toArray(new Predicate[]{}))).getRestriction();
+            return query.where(predicates.toArray(new Predicate[]{})).getRestriction();
 
         };
 
