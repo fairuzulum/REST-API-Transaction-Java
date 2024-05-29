@@ -58,6 +58,7 @@ public class CustomerController {
                 .build();
         Page<Customer> allCustomer = customerService.getAll(request);
 
+
         PagingResponse pagingResponse = PagingResponse.builder()
                 .totalPages(allCustomer.getTotalPages())
                 .totalElements(allCustomer.getTotalElements())
