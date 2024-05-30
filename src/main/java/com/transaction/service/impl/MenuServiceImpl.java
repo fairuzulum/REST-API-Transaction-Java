@@ -1,6 +1,7 @@
 package com.transaction.service.impl;
 
 import com.transaction.dto.request.SearchMenuRequest;
+import com.transaction.entity.Customer;
 import com.transaction.entity.Menu;
 import com.transaction.repository.MenuRepository;
 import com.transaction.service.MenuService;
@@ -30,12 +31,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public Menu getById(String id) {
-        Optional<Menu> optionalMenu = menuRepository.findById(id);
-        if(optionalMenu.isEmpty()){
-            throw new RuntimeException("Menu not found");
-        } else {
-            return optionalMenu.get();
-        }
+        return findByIdOrThrowNotFound(id);
     }
 
     @Override
@@ -59,5 +55,14 @@ public class MenuServiceImpl implements MenuService {
 
         Specification<Menu> specification = MenuSpecification.getSpecification(request);
         return menuRepository.findAll(specification, pageable);
+    }
+
+    @Override
+    public Menu update(Menu request) {
+        return menuRepository.saveAndFlush(request);
+    }
+
+    private Menu findByIdOrThrowNotFound(String id) {
+        return menuRepository.findById(id).orElseThrow(() -> new  RuntimeException("Menu Not Found"));
     }
 }

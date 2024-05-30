@@ -71,4 +71,15 @@ public class MenuController {
         return ResponseEntity.ok()
                 .body(response);
     }
+
+    @PutMapping
+    public ResponseEntity<CommonResponse<Menu>> update(@RequestBody Menu menu){
+        Menu update = menuService.update(menu);
+        CommonResponse<Menu> response = CommonResponse.<Menu>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("UPDATE MENU SUCCESS")
+                .data(update)
+                .build();
+        return ResponseEntity.ok().body(response);
+    }
 }
