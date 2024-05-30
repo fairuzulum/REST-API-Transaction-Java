@@ -4,10 +4,7 @@ package com.transaction.entity;
 import com.transaction.constan.ConstantTable;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 @AllArgsConstructor
@@ -15,6 +12,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Getter
 @Setter
 @Entity
+@Builder
 @Table(name = ConstantTable.CUSTOMER)
 public class Customer {
     @Id

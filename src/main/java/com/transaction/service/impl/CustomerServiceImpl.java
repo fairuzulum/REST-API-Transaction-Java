@@ -2,6 +2,9 @@ package com.transaction.service.impl;
 
 
 import com.transaction.dto.request.SearchCustomerRequest;
+import com.transaction.dto.request.UpdateCustomerRequest;
+import com.transaction.dto.request.UpdateStatusCustomerRequest;
+import com.transaction.dto.response.CustomerResponse;
 import com.transaction.entity.Customer;
 import com.transaction.repository.CustomerRepository;
 import com.transaction.service.CustomerService;
@@ -46,6 +49,34 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer getById(String id) {
         return findByIdOrThrowNotFound(id);
+    }
+
+    @Override
+    public Customer update(UpdateCustomerRequest updateCustomerRequest) {
+
+        Customer customer = getById(updateCustomerRequest.getId());
+
+        Customer update = Customer.builder()
+                .id(updateCustomerRequest.getId())
+                .name(updateCustomerRequest.getName())
+                .phone(updateCustomerRequest.getPhone())
+                .isMember(customer.getIsMember())
+                .build();
+       return customerRepository.saveAndFlush(update);
+    }
+
+    @Override
+    public Customer updateStatus(UpdateStatusCustomerRequest request) {
+
+        Customer customer = getById(request.getId());
+
+        Customer update = Customer.builder()
+                .id(request.getId())
+                .name(customer.getName())
+                .phone(customer.getPhone())
+                .isMember(Boolean.valueOf(request.getIsMember()))
+                .build();
+        return customerRepository.saveAndFlush(update);
     }
 
     private Customer findByIdOrThrowNotFound(String id) {

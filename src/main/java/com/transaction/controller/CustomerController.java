@@ -2,6 +2,8 @@ package com.transaction.controller;
 
 import com.transaction.constan.APIUrl;
 import com.transaction.dto.request.SearchCustomerRequest;
+import com.transaction.dto.request.UpdateCustomerRequest;
+import com.transaction.dto.request.UpdateStatusCustomerRequest;
 import com.transaction.dto.response.CommonResponse;
 import com.transaction.dto.response.PagingResponse;
 import com.transaction.entity.Customer;
@@ -22,8 +24,14 @@ public class CustomerController {
     final CustomerService customerService;
 
     @GetMapping(path = APIUrl.PATH_VAR_ID)
-    public Customer getCustomerById(@PathVariable String id) {
-        return customerService.getById(id);
+    public ResponseEntity<CommonResponse<Customer>> getCustomerById(@PathVariable String id) {
+        Customer getCustomer = customerService.getById(id);
+        CommonResponse<Customer> response = CommonResponse.<Customer>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("SUCCESS GET DATA")
+                .data(getCustomer)
+                .build();
+        return ResponseEntity.ok().body(response);
     }
 
     @PostMapping
@@ -74,9 +82,33 @@ public class CustomerController {
                 .data(allCustomer.getContent())
                 .paging(pagingResponse)
                 .build();
-
         return ResponseEntity.ok()
                 .body(response);
     }
+
+    @PutMapping
+    public ResponseEntity<CommonResponse<Customer>> update(@RequestBody UpdateCustomerRequest request){
+        Customer update = customerService.update(request);
+        CommonResponse<Customer> response = CommonResponse.<Customer>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("SUCCES UPDATE DATA CUSTOMER")
+                .data(update)
+                .build();
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PutMapping(path = APIUrl.PATH_VAR_ID)
+    public ResponseEntity<CommonResponse<Customer>> updateStatus(@RequestBody UpdateStatusCustomerRequest request){
+        Customer update = customerService.updateStatus(request);
+        CommonResponse<Customer> response = CommonResponse.<Customer>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("SUCCES UPDATE STATUS CUSTOMER")
+                .data(update)
+                .build();
+        return ResponseEntity.ok().body(response);
+    }
+
+
+
 
 }
