@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,12 +27,14 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final ValidationUtil validationUtil;
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Customer create(Customer customer) {
         validationUtil.validate(customer);
         return customerRepository.saveAndFlush(customer);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Page<Customer> getAll(SearchCustomerRequest request) {
         if (request.getPage() <= 0){
@@ -49,11 +52,13 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findAll(specification, pageable);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Customer getById(String id) {
         return findByIdOrThrowNotFound(id);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Customer update(UpdateCustomerRequest updateCustomerRequest) {
 
@@ -68,6 +73,7 @@ public class CustomerServiceImpl implements CustomerService {
        return customerRepository.saveAndFlush(update);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Customer updateStatus(UpdateStatusCustomerRequest request) {
 

@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -24,6 +25,7 @@ public class MenuServiceImpl implements MenuService {
     private final ValidationUtil validationUtil;
 
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public MenuResponse create(NewMenuRequest request) {
         validationUtil.validate(request);
@@ -39,11 +41,13 @@ public class MenuServiceImpl implements MenuService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Menu getById(String id) {
         return findByIdOrThrowNotFound(id);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Page<Menu> getALl(SearchMenuRequest request) {
         if (request.getPage() <= 0){
@@ -67,6 +71,7 @@ public class MenuServiceImpl implements MenuService {
         return menuRepository.findAll(specification, pageable);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Menu update(Menu request) {
         findByIdOrThrowNotFound(request.getId());

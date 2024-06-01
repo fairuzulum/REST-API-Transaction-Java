@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,21 +26,25 @@ public class TableServiceImpl implements TableService {
 
     private final TableRespository tableRespository;
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Table create(Table table) {
         return tableRespository.saveAndFlush(table);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Table getById(Long id) {
         return findByIdOrThrowNotFound(String.valueOf(id));
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Table update(Table request) {
         return tableRespository.saveAndFlush(request);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Page<Table> getAll(TableRequest request) {
         if (request.getPage() <= 0){
