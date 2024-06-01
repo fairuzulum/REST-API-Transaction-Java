@@ -1,8 +1,10 @@
 package com.transaction.controller;
 
 import com.transaction.constan.APIUrl;
+import com.transaction.dto.request.NewMenuRequest;
 import com.transaction.dto.request.SearchMenuRequest;
 import com.transaction.dto.response.CommonResponse;
+import com.transaction.dto.response.MenuResponse;
 import com.transaction.dto.response.PagingResponse;
 import com.transaction.entity.Menu;
 import com.transaction.service.MenuService;
@@ -22,9 +24,15 @@ public class MenuController {
     final MenuService menuService;
 
     @PostMapping
-    public ResponseEntity<CommonResponse<Menu>> createMenu(@RequestBody Menu menu) {
-        Menu newMenu = menuService.create(menu);
-        CommonResponse<Menu> response = CommonResponse.<Menu>builder()
+    public ResponseEntity<CommonResponse<MenuResponse>> createMenu(@RequestBody NewMenuRequest menu) {
+        menuService.create(menu);
+
+        MenuResponse newMenu = MenuResponse.builder()
+                .name(menu.getName())
+                .price(menu.getPrice())
+                .build();
+
+        CommonResponse<MenuResponse> response = CommonResponse.<MenuResponse>builder()
                 .statusCode(HttpStatus.CREATED.value())
                 .message("CREATED MENU SUCCESS")
                 .data(newMenu)

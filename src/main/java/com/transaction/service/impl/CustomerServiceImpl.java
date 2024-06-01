@@ -9,6 +9,7 @@ import com.transaction.entity.Customer;
 import com.transaction.repository.CustomerRepository;
 import com.transaction.service.CustomerService;
 import com.transaction.specification.CustomerSpecification;
+import com.transaction.utils.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,9 +24,11 @@ import java.util.List;
 @Service
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
+    private final ValidationUtil validationUtil;
 
     @Override
     public Customer create(Customer customer) {
+        validationUtil.validate(customer);
         return customerRepository.saveAndFlush(customer);
     }
 

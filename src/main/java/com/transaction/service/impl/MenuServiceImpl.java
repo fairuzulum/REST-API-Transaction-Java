@@ -1,11 +1,13 @@
 package com.transaction.service.impl;
 
+import com.transaction.dto.request.NewMenuRequest;
 import com.transaction.dto.request.SearchMenuRequest;
-import com.transaction.entity.Customer;
+import com.transaction.dto.response.MenuResponse;
 import com.transaction.entity.Menu;
 import com.transaction.repository.MenuRepository;
 import com.transaction.service.MenuService;
 import com.transaction.specification.MenuSpecification;
+import com.transaction.utils.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,19 +16,27 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-
 @RequiredArgsConstructor
 @Service
 public class MenuServiceImpl implements MenuService {
 
     private final MenuRepository menuRepository;
+    private final ValidationUtil validationUtil;
 
 
     @Override
-    public Menu create(Menu menu) {
-        return menuRepository.saveAndFlush(menu);
+    public MenuResponse create(NewMenuRequest request) {
+        validationUtil.validate(request);
+        Menu menu = Menu.builder()
+                .name(request.getName())
+                .price(request.getPrice())
+                .build();
+       menuRepository.saveAndFlush(menu);
+
+       return  MenuResponse.builder()
+                .name(request.getName())
+                .price(request.getPrice())
+                .build();
     }
 
     @Override
