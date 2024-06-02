@@ -3,7 +3,6 @@ package com.transaction.service;
 import com.transaction.dto.request.SearchCustomerRequest;
 import com.transaction.dto.request.UpdateCustomerRequest;
 import com.transaction.dto.request.UpdateStatusCustomerRequest;
-import com.transaction.dto.response.CustomerResponse;
 import com.transaction.entity.Customer;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
