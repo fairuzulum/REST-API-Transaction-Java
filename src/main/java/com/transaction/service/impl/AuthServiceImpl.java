@@ -2,12 +2,16 @@ package com.transaction.service.impl;
 
 import com.transaction.constan.UserRole;
 import com.transaction.dto.request.AuthRequest;
+import com.transaction.dto.request.AuthRequestCustomer;
 import com.transaction.dto.response.LoginResponse;
 import com.transaction.dto.response.RegisterResponse;
+import com.transaction.dto.response.RegisterResponseCustomer;
+import com.transaction.entity.Customer;
 import com.transaction.entity.Role;
 import com.transaction.entity.UserAccount;
 import com.transaction.repository.UserAccountRepository;
 import com.transaction.service.AuthService;
+import com.transaction.service.CustomerService;
 import com.transaction.service.JwtService;
 import com.transaction.service.RoleService;
 import lombok.RequiredArgsConstructor;
@@ -34,10 +38,12 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
+    private final CustomerService customerService;
+
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public RegisterResponse register(AuthRequest request) {
+    public RegisterResponseCustomer register(AuthRequestCustomer request) {
         Optional<UserAccount> currentUser = userAccountRepository.findByUsername(request.getUsername());
 
         if(currentUser.isPresent()){
@@ -54,7 +60,18 @@ public class AuthServiceImpl implements AuthService {
                 .build();
         userAccountRepository.saveAndFlush(account);
 
-        return RegisterResponse.builder()
+        Customer addCustomer = Customer.builder()
+                .name(request.getName())
+                .phone(request.getPhone())
+                .isMember(true)
+                .userAccount(account)
+                .build();
+
+        customerService.create(addCustomer);
+
+        return RegisterResponseCustomer.builder()
+                .name(addCustomer.getName())
+                .phone(addCustomer.getPhone())
                 .username(account.getUsername())
                 .roles(account.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
                 .build();

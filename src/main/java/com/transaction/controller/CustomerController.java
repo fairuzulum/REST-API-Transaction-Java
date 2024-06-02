@@ -34,17 +34,6 @@ public class CustomerController {
         return ResponseEntity.ok().body(response);
     }
 
-    @PostMapping
-    public ResponseEntity<CommonResponse<Customer>> createNewCustomer(@RequestBody Customer customer) {
-        Customer newCustomer = customerService.create(customer);
-        CommonResponse<Customer> response = CommonResponse.<Customer>builder()
-                .statusCode(HttpStatus.CREATED.value())
-                .message("CREATED CUSTOMER SUCCESS")
-                .data(newCustomer)
-                .build();
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
     @GetMapping
     public ResponseEntity<CommonResponse<List<Customer>>> getAllCustomers(
             @RequestParam(name = "page", defaultValue = "1") Integer page,

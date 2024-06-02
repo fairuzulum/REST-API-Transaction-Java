@@ -29,4 +29,10 @@ public class Customer {
 
     @Column(name = "is_member")
     private Boolean isMember;
+
+    @OneToOne
+    @JoinColumn(name = "user_account_id", unique = true)
+    private UserAccount userAccount;
+
+
 }
