@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -17,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserServiceImpl implements UserService {
     private final UserAccountRepository userAccountRepository;
 
+    @Transactional(readOnly = true)
     @Override
     public UserAccount getByUserId(String id) {
         return userAccountRepository.findById(id).orElseThrow(
@@ -24,6 +26,7 @@ public class UserServiceImpl implements UserService {
         );
     }
 
+    @Transactional(readOnly = true)
     @Override
     public UserAccount getByContext() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
