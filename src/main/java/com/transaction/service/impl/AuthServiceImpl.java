@@ -8,9 +8,13 @@ import com.transaction.entity.Role;
 import com.transaction.entity.UserAccount;
 import com.transaction.repository.UserAccountRepository;
 import com.transaction.service.AuthService;
+import com.transaction.service.JwtService;
 import com.transaction.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,6 +31,9 @@ public class AuthServiceImpl implements AuthService {
     private final UserAccountRepository userAccountRepository;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -83,6 +90,20 @@ public class AuthServiceImpl implements AuthService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public LoginResponse login(AuthRequest request) {
-        return null;
+        Optional<UserAccount> username = userAccountRepository.findByUsername(request.getUsername());
+        if(username.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.OK, "user not exist");
+        }
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(request.getUsername(),request.getPassword());
+
+        Authentication authenticate = authenticationManager.authenticate(authentication);
+        UserAccount user = (UserAccount) authenticate.getPrincipal();
+        String token = jwtService.generateToken(user);
+        return LoginResponse.builder()
+                .token(token)
+                .username(user.getUsername())
+                .roles(user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
+                .build();
     }
 }

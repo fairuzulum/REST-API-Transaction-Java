@@ -3,6 +3,7 @@ package com.transaction.controller;
 import com.transaction.constan.APIUrl;
 import com.transaction.dto.request.AuthRequest;
 import com.transaction.dto.response.CommonResponse;
+import com.transaction.dto.response.LoginResponse;
 import com.transaction.dto.response.RegisterResponse;
 import com.transaction.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,17 @@ public class AuthController {
                 .build();
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping(path = "/login")
+    public ResponseEntity<CommonResponse<?>> login(@RequestBody AuthRequest request){
+        LoginResponse loginResponse = authService.login(request);
+        CommonResponse<LoginResponse> response = CommonResponse.<LoginResponse>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("login Success")
+                .data(loginResponse)
+                .build();
+        return ResponseEntity.ok(response);
     }
 
 }
