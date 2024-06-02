@@ -31,7 +31,26 @@ public class AuthServiceImpl implements AuthService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public RegisterResponse register(AuthRequest request) {
-        return null;
+        Optional<UserAccount> currentUser = userAccountRepository.findByUsername(request.getUsername());
+
+        if(currentUser.isPresent()){
+            throw new ResponseStatusException(HttpStatus.OK, "user exist");
+        }
+
+        Role customer = roleService.getOrSave(UserRole.ROLE_CUSTOMER);
+
+        UserAccount account = UserAccount.builder()
+                .username(request.getUsername())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(List.of(customer))
+                .isNabled(true)
+                .build();
+        userAccountRepository.saveAndFlush(account);
+
+        return RegisterResponse.builder()
+                .username(account.getUsername())
+                .roles(account.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
+                .build();
     }
 
     @Transactional(rollbackFor = Exception.class)

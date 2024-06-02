@@ -31,4 +31,16 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PostMapping(path = "register")
+    public ResponseEntity<CommonResponse<?>> registerCustomer(@RequestBody AuthRequest request){
+        RegisterResponse register = authService.register(request);
+        CommonResponse<RegisterResponse> response = CommonResponse.<RegisterResponse>builder()
+                .statusCode(HttpStatus.CREATED.value())
+                .message("Register Succss")
+                .data(register)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
 }
