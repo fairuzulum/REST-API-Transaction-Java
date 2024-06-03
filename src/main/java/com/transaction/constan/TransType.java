@@ -1,6 +1,6 @@
 package com.transaction.constan;
 
 public enum TransType {
-    EA,
+    TA,
     EI
 }

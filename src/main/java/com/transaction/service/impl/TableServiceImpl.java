@@ -4,8 +4,10 @@ package com.transaction.service.impl;
 import com.transaction.dto.request.TableRequest;
 import com.transaction.entity.Menu;
 import com.transaction.entity.Table;
+import com.transaction.entity.UserAccount;
 import com.transaction.repository.TableRespository;
 import com.transaction.service.TableService;
+import com.transaction.service.UserService;
 import com.transaction.specification.MenuSpecification;
 import com.transaction.specification.TableSpecification;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +16,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,10 +29,15 @@ import java.util.Optional;
 public class TableServiceImpl implements TableService {
 
     private final TableRespository tableRespository;
+    private final UserService userService;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Table create(Table table) {
+        UserAccount userAccount = userService.getByContext();
+        if (!userAccount.getUsername().equals("admin")){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "permission denied");
+        }
         return tableRespository.saveAndFlush(table);
     }
 
@@ -41,6 +50,10 @@ public class TableServiceImpl implements TableService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Table update(Table request) {
+        UserAccount userAccount = userService.getByContext();
+        if (!userAccount.getUsername().equals("admin")){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "permission denied");
+        }
         return tableRespository.saveAndFlush(request);
     }
 
