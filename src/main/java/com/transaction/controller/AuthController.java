@@ -23,16 +23,16 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping(path = "/register/admin")
-    public ResponseEntity<CommonResponse<?>> registerAdmin(@RequestBody AuthRequest request){
-        RegisterResponse register = authService.registerAdmin(request);
-        CommonResponse<RegisterResponse> response = CommonResponse.<RegisterResponse>builder()
-                .statusCode(HttpStatus.CREATED.value())
-                .message("Register Success")
-                .data(register)
-                .build();
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
+//    @PostMapping(path = "/register/admin")
+//    public ResponseEntity<CommonResponse<?>> registerAdmin(@RequestBody AuthRequest request){
+//        RegisterResponse register = authService.registerAdmin(request);
+//        CommonResponse<RegisterResponse> response = CommonResponse.<RegisterResponse>builder()
+//                .statusCode(HttpStatus.CREATED.value())
+//                .message("Register Success")
+//                .data(register)
+//                .build();
+//        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+//    }
 
     @PostMapping(path = "register")
     public ResponseEntity<CommonResponse<?>> registerCustomer(@RequestBody AuthRequestCustomer request){

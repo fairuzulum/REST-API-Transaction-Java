@@ -10,6 +10,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface AuthService {
     RegisterResponseCustomer register(AuthRequestCustomer request);
-    RegisterResponse registerAdmin(AuthRequest request);
+//    RegisterResponse registerAdmin(AuthRequest request);
     LoginResponse login(AuthRequest request);
 }

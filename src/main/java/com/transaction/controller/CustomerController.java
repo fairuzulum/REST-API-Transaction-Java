@@ -4,8 +4,7 @@ import com.transaction.constan.APIUrl;
 import com.transaction.dto.request.SearchCustomerRequest;
 import com.transaction.dto.request.UpdateCustomerRequest;
 import com.transaction.dto.request.UpdateStatusCustomerRequest;
-import com.transaction.dto.response.CommonResponse;
-import com.transaction.dto.response.PagingResponse;
+import com.transaction.dto.response.*;
 import com.transaction.entity.Customer;
 import com.transaction.service.CustomerService;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +34,7 @@ public class CustomerController {
     }
 
     @GetMapping
-    public ResponseEntity<CommonResponse<List<Customer>>> getAllCustomers(
+    public ResponseEntity<CommonResponse<List<CustomerResponse>>> getAllCustomers(
             @RequestParam(name = "page", defaultValue = "1") Integer page,
             @RequestParam(name = "size", defaultValue = "5") Integer size,
 
@@ -55,6 +54,14 @@ public class CustomerController {
                 .build();
         Page<Customer> allCustomer = customerService.getAll(request);
 
+        List<CustomerResponse> cstmresponse = allCustomer.stream()
+                .map(cstm -> CustomerResponse.builder()
+                        .id(cstm.getId())
+                        .name(cstm.getName())
+                        .phone(cstm.getPhone())
+                        .userAccountId(cstm.getUserAccount().getId())
+                        .build()).toList();
+
 
         PagingResponse pagingResponse = PagingResponse.builder()
                 .totalPages(allCustomer.getTotalPages())
@@ -65,10 +72,10 @@ public class CustomerController {
                 .hasPrevious(allCustomer.hasPrevious())
                 .build();
 
-        CommonResponse<List<Customer>> response = CommonResponse.<List<Customer>>builder()
+        CommonResponse<List<CustomerResponse>> response = CommonResponse.<List<CustomerResponse>>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message("Data Found")
-                .data(allCustomer.getContent())
+                .data(cstmresponse)
                 .paging(pagingResponse)
                 .build();
         return ResponseEntity.ok()

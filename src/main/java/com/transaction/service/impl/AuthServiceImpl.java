@@ -14,6 +14,7 @@ import com.transaction.service.AuthService;
 import com.transaction.service.CustomerService;
 import com.transaction.service.JwtService;
 import com.transaction.service.RoleService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -77,31 +78,52 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public RegisterResponse registerAdmin(AuthRequest request) {
-        Optional<UserAccount> currentUser = userAccountRepository.findByUsername(request.getUsername());
+//    @Transactional(rollbackFor = Exception.class)
+//    @Override
+//    public RegisterResponse registerAdmin(AuthRequest request) {
+//        Optional<UserAccount> currentUser = userAccountRepository.findByUsername(request.getUsername());
+//
+//        if(currentUser.isPresent()){
+//            throw new ResponseStatusException(HttpStatus.OK, "user exist");
+//        }
+//
+//        Role admin = roleService.getOrSave(UserRole.ROLE_ADMIN);
+//        Role customer = roleService.getOrSave(UserRole.ROLE_CUSTOMER);
+//
+//        UserAccount account = UserAccount.builder()
+//                .username(request.getUsername())
+//                .password(passwordEncoder.encode(request.getPassword()))
+//                .role(List.of(admin, customer))
+//                .isNabled(true)
+//                .build();
+//        userAccountRepository.saveAndFlush(account);
+//
+//        return RegisterResponse.builder()
+//                .username(account.getUsername())
+//                .roles(account.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
+//                .build();
+//
+//    }
 
-        if(currentUser.isPresent()){
-            throw new ResponseStatusException(HttpStatus.OK, "user exist");
+    @Transactional(rollbackFor = Exception.class)
+    @PostConstruct
+    public void initAdmin() {
+        Optional<UserAccount> currentUser = userAccountRepository.findByUsername("admin");
+        if (currentUser.isPresent()) {
+            return;
         }
 
-        Role admin = roleService.getOrSave(UserRole.ROLE_ADMIN);
         Role customer = roleService.getOrSave(UserRole.ROLE_CUSTOMER);
+        Role admin = roleService.getOrSave(UserRole.ROLE_ADMIN);
 
         UserAccount account = UserAccount.builder()
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
+                .username("admin")
+                .password(passwordEncoder.encode("password"))
                 .role(List.of(admin, customer))
                 .isNabled(true)
                 .build();
-        userAccountRepository.saveAndFlush(account);
 
-        return RegisterResponse.builder()
-                .username(account.getUsername())
-                .roles(account.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
-                .build();
-
+        userAccountRepository.save(account);
     }
 
     @Transactional(rollbackFor = Exception.class)
