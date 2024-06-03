@@ -24,7 +24,7 @@ Akses All user(tidak wajib login):
 - Get Table By id
 
 
-export json berikut ini di postman [download](https://drive.google.com/file/d/1Jxk5VvBmJVp5wB01A_T-colJaYZmS_vL/view?usp=sharing)
+import json berikut ini di postman [download](https://drive.google.com/file/d/1Jxk5VvBmJVp5wB01A_T-colJaYZmS_vL/view?usp=sharing)
 
 
 
