@@ -70,6 +70,12 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<TransactionResponse> getAll() {
+
+        UserAccount userAccount = userService.getByContext();
+        if (!userAccount.getUsername().equals("admin")){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "permission denied");
+        }
+
         List<Transaction> transactions = transactionRepository.findAll();
 
         return transactions.stream().map(trx -> {

@@ -40,6 +40,10 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Customer create(Customer customer) {
+        UserAccount userAccount = userService.getByContext();
+        if (!userAccount.getUsername().equals("admin")){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "permission denied");
+        }
         validationUtil.validate(customer);
         return customerRepository.saveAndFlush(customer);
     }
