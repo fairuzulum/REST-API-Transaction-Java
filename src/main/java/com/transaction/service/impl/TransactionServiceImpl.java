@@ -73,20 +73,20 @@ public class TransactionServiceImpl implements TransactionService {
         List<Transaction> transactions = transactionRepository.findAll();
 
         return transactions.stream().map(trx -> {
-            List<TransactionDetailResponse> trxDetailResponse = trx.getTransactionDetails().stream().map(detail -> {
-                return TransactionDetailResponse.builder()
-                        .menuName(detail.getMenu().getName())
-                        .menuPrice(detail.getMenu().getPrice())
-                        .quantity(detail.getQty())
-                        .total(detail.getMenu().getPrice() * detail.getQty())
-                        .build();
-            }).toList();
+            List<TransactionDetailResponse> trxDetailResponse = trx.getTransactionDetails().stream()
+                    .map(detail -> TransactionDetailResponse.builder()
+                    .menuName(detail.getMenu().getName())
+                    .menuPrice(detail.getMenu().getPrice())
+                    .quantity(detail.getQty())
+                    .total(detail.getMenu().getPrice() * detail.getQty())
+                    .build()).toList();
 
 
             return TransactionResponse.builder()
                     .customerName(trx.getCustomer().getName())
                     .transDate(trx.getTransDate())
                     .tableName(trx.getTable().getTableName())
+                    .typeTrans(trx.getTransactionType().getDescription())
                     .transactionDetails(trxDetailResponse)
                     .build();
         }).toList();

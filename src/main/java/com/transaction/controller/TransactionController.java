@@ -26,14 +26,13 @@ public class TransactionController {
     public ResponseEntity<CommonResponse<TransactionResponse>> createTransaction(@RequestBody TransactionRequest request) {
         Transaction transaction = transactionService.create(request);
 
-        List<TransactionDetailResponse> trxDetailResponse = transaction.getTransactionDetails().stream().map(detail -> {
-            return TransactionDetailResponse.builder()
-                    .menuName(detail.getMenu().getName())
-                    .menuPrice(detail.getMenu().getPrice())
-                    .quantity(detail.getQty())
-                    .total(detail.getMenu().getPrice() * detail.getQty())
-                    .build();
-        }).toList();
+        List<TransactionDetailResponse> trxDetailResponse = transaction.getTransactionDetails().stream()
+                .map(detail -> TransactionDetailResponse.builder()
+                .menuName(detail.getMenu().getName())
+                .menuPrice(detail.getMenu().getPrice())
+                .quantity(detail.getQty())
+                .total(detail.getMenu().getPrice() * detail.getQty())
+                .build()).toList();
 
         TransactionResponse trx = TransactionResponse.builder()
                 .customerName(transaction.getCustomer().getName())
@@ -52,7 +51,7 @@ public class TransactionController {
     }
 
     @GetMapping
-    public List<TransactionResponse> getAllTransacion(){
+    public List<TransactionResponse> getAllTransaction(){
         return transactionService.getAll();
     }
 
