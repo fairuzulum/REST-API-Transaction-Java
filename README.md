@@ -1,6 +1,3 @@
-
-# Challenge WMB
-
 Init Project:
 - buat databases sesuai dengan yang ada di aplication.properties (boleh diubah namanya, sesuaikan saja sendiri:v)
 - run project, user admin otomatis terbuat, langsung bisa login (username = admin, password = password)
